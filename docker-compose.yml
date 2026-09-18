@@ -1,0 +1,41 @@
+services:
+
+  fastapi:
+    image: elbadaouihamza/gherkin-fastapi:0.3.0
+    container_name: gherkin-fastapi-v-prod
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://clee:clee@postgres:5432/clee_rag
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    depends_on:
+      - postgres
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: clee-rag-postgres-v-prod
+    environment:
+      POSTGRES_USER: clee
+      POSTGRES_PASSWORD: clee
+      POSTGRES_DB: clee_rag
+    ports:
+      - "5433:5432"
+    volumes:
+      - clee_rag_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql:ro
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: clee-rag-pgadmin-v-prod
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+volumes:
+  clee_rag_data:
