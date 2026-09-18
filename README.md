@@ -65,36 +65,29 @@ cd /chemin/vers/mon-microservice-java/
 
 > Le CLI se connecte par défaut au backend sur `http://127.0.0.1:8000`, donc l'étape 4 (`docker compose up`) doit avoir été faite avant de l'utiliser.
 
-### (Optionnel) Créer un alias `gfy`
+## 6. Lancer le CLI et initialiser le workspace
 
-Pour éviter de retaper `java -jar gherkify-cli-0.3.0.jar` à chaque fois :
-
-**Bash / macOS / Linux / Git Bash :**
-```bash
-alias gfy='java -jar gherkify-cli-0.3.0.jar'
-```
-
-**PowerShell :**
-```powershell
-function gfy { java -jar gherkify-cli-0.3.0.jar @args }
-```
-
-(Le reste de ce README utilise `gfy` par commodité — remplacez par `java -jar gherkify-cli-0.3.0.jar` si vous n'avez pas créé l'alias.)
-
-## 6. Initialiser le workspace Gherkify
-
-Toujours depuis la racine du microservice Java :
+Toujours depuis la racine du microservice Java, lancez le jar **une seule fois** :
 
 ```bash
-gfy init
+java -jar gherkify-cli-0.3.0.jar
 ```
 
-Cela crée le dossier `.gherkify/` (config, métadonnées, logs) nécessaire à toutes les autres commandes.
+Cela démarre l'application et ouvre un **sous-shell interactif (Spring Shell)** : vous obtenez un prompt dans lequel vous tapez ensuite directement les commandes `gfy ...`, sans les préfixer par `java -jar` (pas besoin d'alias, le shell reste ouvert) :
+
+```
+shell:> gfy init
+shell:> gfy help
+```
+
+`gfy init` crée le dossier `.gherkify/` (config, métadonnées, logs) nécessaire à toutes les autres commandes.
 
 ## 7. Documentation complète des commandes
 
-```bash
-gfy help
+Dans le même sous-shell :
+
+```
+shell:> gfy help
 ```
 
 Aperçu des commandes disponibles :
@@ -114,16 +107,16 @@ Aperçu des commandes disponibles :
 
 Pour l'aide détaillée d'une commande précise :
 
-```bash
-gfy help "gfy generate"
+```
+shell:> gfy help "gfy generate"
 ```
 
 Exemples de génération :
 
-```bash
-gfy generate "focus on the crud of facteur composants"
-gfy generate --jira PROJ-42
-gfy generate --jira PROJ-42 --code
+```
+shell:> gfy generate "focus on the crud of facteur composants"
+shell:> gfy generate --jira PROJ-42
+shell:> gfy generate --jira PROJ-42 --code
 ```
 
 ---
@@ -137,9 +130,15 @@ cd gherkin-fastapi-prod
 # -> copier le .env reçu par Zoom à la racine
 docker compose up -d
 
-# 2. CLI, depuis le projet Java à analyser
+# 2. CLI, depuis le projet Java à analyser (une seule fois : lance le sous-shell)
 cp /chemin/vers/gherkin-fastapi-prod/gherkify-cli-0.3.0.jar .
-java -jar gherkify-cli-0.3.0.jar init
-java -jar gherkify-cli-0.3.0.jar help
-java -jar gherkify-cli-0.3.0.jar generate "focus on ..."
+java -jar gherkify-cli-0.3.0.jar
+```
+
+Puis, dans le sous-shell qui s'ouvre :
+
+```
+shell:> gfy init
+shell:> gfy help
+shell:> gfy generate "focus on ..."
 ```
